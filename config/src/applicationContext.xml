@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	
+	
+	
+<!-- 这里是用的spring与hibernate整合的第二种方法 -->
+<!-- 引入外部的jdbc.properties -->
+<context:property-placeholder location="classpath:jdbc.properties"/>
+<!-- 将C3P0的数据源交给spring管理并注入需要连接数据库需要的属性的信息 -->
+
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${jdbc.driverClass}"/>
+	<property name="jdbcUrl" value="${jdbc.url}"/>
+	<property name="user" value="${jdbc.username}"/>
+	<property name="password" value="${jdbc.password}"/>
+</bean>
+
+<!-- 将Struts和hibernate都交给Spring管理 -->
+<!-- 将action交给spring -->
+<bean id="userAction" class="com.itheima.web.action.UserAction" scope="prototype">
+	<property name="userService" ref="userService"/>
+</bean>
+
+<!-- 将service交给spring -->
+
+<bean id="userService" class="com.itheima.crm.service.impl.UserServiceImpl">
+	<property name="userDao" ref="userDao"/>
+</bean>
+
+<!-- 将dao交给spring ,并将配置好的sessionFactory注入到useDao中-->
+<bean id="userDao" class="com.itheima.crm.dao.impl.UserDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+<!--									 这里是customer的配置 																		-->
+
+
+<bean id="customerAction" class="com.itheima.web.action.CustomerAction" scope="prototype">
+	<property name="customerService" ref="customerService"/>
+</bean>
+
+<!-- 将service交给spring -->
+
+<bean id="customerService" class="com.itheima.crm.service.impl.CustomerServiceImpl">
+	<property name="customerDao" ref="customerDao"></property>
+</bean>
+
+<!-- 将dao交给spring ,并将配置好的sessionFactory注入到useDao中-->
+<bean id="customerDao" class="com.itheima.crm.dao.impl.CustomerDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+<!--									 这里是baseDict的配置 																		-->
+
+
+<bean id="baseDictAction" class="com.itheima.web.action.BaseDictAction" scope="prototype">
+	<property name="baseDictService" ref="baseDictService"/>
+</bean>
+
+<!-- 将service交给spring -->
+
+<bean id="baseDictService" class="com.itheima.crm.service.impl.BaseDictServiceImpl">
+	<property name="baseDictDao" ref="baseDictDao"></property>
+</bean>
+
+<!-- 将dao交给spring ,并将配置好的sessionFactory注入到useDao中-->
+<bean id="baseDictDao" class="com.itheima.crm.dao.impl.BaseDictDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+
+
+
+
+
+
+
+<!-- 配置sessionFactory，这里因为采取的Hibernate全部的交由给spring管理的第二种方法，所以需要在这里的配一下的数据源，并将连接的属性的都注入到的DataSource中 -->
+<!-- 配置dataSource -->
+
+<!-- 将配置好dataSource注入到的sessionFactory中，并将Hibernate中的剩下的相关的信息注入进来 -->
+<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
+	<property name="dataSource" ref="dataSource"/>
+	<!-- 这里注入进来的Hibernate信息是以properties类型形式存在的 -->
+	<property name="hibernateProperties">
+		<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			<prop key="hibernate.format_sql">true</prop>
+			<prop key="hibernate.hbm2ddl.auto">update</prop>
+		</props>
+	</property>
+	
+	<!-- 将Hibernate的映射文件注入.这个映射文件是以数组的类型 -->
+	<property name="mappingResources">
+		<list>
+			<value>com/itheima/crm/domain/User.hbm.xml</value>
+			<value>com/itheima/crm/domain/Customer.hbm.xml</value>
+			<value>com/itheima/crm/domain/BaseDict.hbm.xml</value>
+		</list>
+	</property>
+</bean>
+
+
+<!-- 在service层添加事务管理 -->
+<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>	
+<!--开启事物 -->
+<tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

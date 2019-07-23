@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    
+    
+<!-- 配置实体和表的映射 -->
+<hibernate-mapping>
+	<!--明确实体和表 -->
+	<class name="com.itheima.crm.domain.BaseDict" table="base_dict">
+		<!-- 对应主键，明确主键生成策略和id -->
+		<id name="dict_id" column="dict_id">
+			<generator class="uuid"></generator><!-- 主键是字符串类型 -->
+		</id>
+		<property name="dict_type_code" column="dict_type_code"/>
+		<property name="dict_type_name" column="dict_type_name"/>
+		<property name="dict_item_name" column="dict_item_name"/>
+		<property name="dict_item_code" column="dict_item_code"/>
+		<property name="dict_sort" column="dict_sort"/>
+		<property name="dict_enable" column="dict_enable"/>
+		<property name="dict_memo" column="dict_memo"/>
+	
+	
+	</class>
+
+
+
+
+</hibernate-mapping>
