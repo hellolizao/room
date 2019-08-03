@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    
+    
+<!-- 配置实体和表的映射 -->
+<hibernate-mapping>
+	<!--明确实体和表 -->
+	<class name="com.itheima.crm.domain.User" table="sys_user">
+		<!-- 对应主键，明确主键生成策略和id -->
+		<id name="user_id" column="user_id">
+			<generator class="native"></generator>
+		</id>
+		<property name="user_code" column="user_code"/>
+		<property name="user_name" column="user_name"/>
+		<property name="user_password" column="user_password"/>
+		<property name="user_state" column="user_state"/>
+	
+	
+	</class>
+
+
+
+
+</hibernate-mapping>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 配置Struts2的常量 -->
+	<constant name="struts.action.extension" value="action"/>
+<!-- 配置action请求访问 -->	
+	<package name="crm" extends="struts-default" namespace="/">
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="login">/login.jsp</result>
+			<result name="success" type="redirect">/index.jsp</result><!-- 这里的需要将回写的信息在login.jsp中获取 -->
+		</action>
+		
+		
+		<action name="customer_*" class="customerAction" method="{1}">
+			<result name="saveUI">/jsp/customer/add.jsp</result>
+			<result name="findAll">/jsp/customer/list.jsp</result>
+			<result name="saveSuccess"  type="redirectAction">customer_findAll.action</result>
+			<result name="deleteSuccess"  type="redirectAction">customer_findAll.action</result><!-- 客户删除成功后要重新的查询一次 -->
+			<result name="updateSuccess"  type="redirectAction">customer_findAll.action</result><!-- 客户重新的修改后查询一次 -->
+			<result name="editSuccess" >/jsp/customer/edit.jsp</result><!-- 修改时进行数据回显 -->
+			<result name="input"  >/jsp/customer/add.jsp</result>
+			
+			
+		<!--配置拦截器来的限制上传的图片的大小和类型的限制 -->
+		<interceptor-ref name="defaultStack">
+			<param name="fileUpload.maximumSize">2097152</param>
+			<param name="fileUpload.allowedExtensions">.jsp</param>
+		
+		</interceptor-ref>
+		
+		
+		</action>
+		
+				
+		
+		<action name="baseDict_*" class="baseDictAction" method="{1}">
+		
+		</action>
+		
+		<action name="linkMan_*" class="linkManAction" method="{1}">
+			<result name="findAll">/jsp/linkman/list.jsp</result>
+			<result name="saveUI">/jsp/linkman/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">linkMan_findAll.action</result>
+			<result name="editSuccess" >/jsp/linkman/edit.jsp</result><!--修改联系人信息。需要的做的1:是将该人的信息回显2:修改完重新的查询-->
+			<result name="updateSuccess" type="redirectAction">linkMan_findAll.action</result>
+			<result name="deleteSuccess" type="redirectAction">linkMan_findAll.action</result>
+        </action>
+		
+	</package>
+</struts>
