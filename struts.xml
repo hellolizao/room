@@ -7,13 +7,35 @@
 	<constant name="struts.action.extension" value="action"/>
 <!-- 配置action请求访问 -->	
 	<package name="crm" extends="struts-default" namespace="/">
-		<action name="user_*" class="userAction" method="{1}">
+
+		<!--定义一个拦截器-->
+		<interceptors>
+			<interceptor name="privilegeInterceptor" class="com.itheima.web.interceptor.PrivilegeInterceptor"/>
+		</interceptors>
+
+		<!--将login配置成全局的，各个action都可以去访问-->
+		<global-results>
 			<result name="login">/login.jsp</result>
+		</global-results>
+
+
+		<action name="user_*" class="userAction" method="{1}">
+
+			<interceptor-ref name="privilegeInterceptor">
+				<param name="excludeMethods">login,regist</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+
+			
 			<result name="success" type="redirect">/index.jsp</result><!-- 这里的需要将回写的信息在login.jsp中获取 -->
 		</action>
 		
 		
 		<action name="customer_*" class="customerAction" method="{1}">
+
+
+
+
 			<result name="saveUI">/jsp/customer/add.jsp</result>
 			<result name="findAll">/jsp/customer/list.jsp</result>
 			<result name="saveSuccess"  type="redirectAction">customer_findAll.action</result>
@@ -24,7 +46,10 @@
 			
 			
 		<!--配置拦截器来的限制上传的图片的大小和类型的限制 -->
+			<interceptor-ref name="privilegeInterceptor"/>
 		<interceptor-ref name="defaultStack">
+
+
 			<param name="fileUpload.maximumSize">2097152</param>
 			<param name="fileUpload.allowedExtensions">.jsp</param>
 		
@@ -36,10 +61,19 @@
 				
 		
 		<action name="baseDict_*" class="baseDictAction" method="{1}">
+
+			<interceptor-ref name="privilegeInterceptor"/>
+
+			<interceptor-ref name="defaultStack"/>
 		
 		</action>
 		
 		<action name="linkMan_*" class="linkManAction" method="{1}">
+
+			<interceptor-ref name="privilegeInterceptor"/>
+
+			<interceptor-ref name="defaultStack"/>
+
 			<result name="findAll">/jsp/linkman/list.jsp</result>
 			<result name="saveUI">/jsp/linkman/add.jsp</result>
 			<result name="saveSuccess" type="redirectAction">linkMan_findAll.action</result>
@@ -47,6 +81,22 @@
 			<result name="updateSuccess" type="redirectAction">linkMan_findAll.action</result>
 			<result name="deleteSuccess" type="redirectAction">linkMan_findAll.action</result>
         </action>
+
+
+
+		<action name="saleVisit_*" class="saleVisitAction" method="{1}">
+
+			<interceptor-ref name="privilegeInterceptor"/>
+
+			<interceptor-ref name="defaultStack"/>
+
+			<result name="findAll">/jsp/salevisit/list.jsp</result>
+			<result name="saveUI">/jsp/salevisit/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">saleVisit_findAll.action</result>
+
+
+
+		</action>
 		
 	</package>
 </struts>

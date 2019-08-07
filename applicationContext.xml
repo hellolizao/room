@@ -12,8 +12,9 @@
 	http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
-	
-	
+
+<!--开启注解方式的属性注入的-->
+<context:annotation-config></context:annotation-config>
 	
 	
 <!-- 这里是用的spring与hibernate整合的第二种方法 -->
@@ -96,9 +97,21 @@
 </bean>
 
 
+	<!--									 这里是saleVisit的配置 																		-->
 
-<!-- 配置sessionFactory，这里因为采取的Hibernate全部的交由给spring管理的第二种方法，所以需要在这里的配一下的数据源，并将连接的属性的都注入到的DataSource中 -->
-<!-- 配置dataSource -->
+<bean id="saleVisitAction" class="com.itheima.web.action.SaleVisitAction" scope="prototype">
+</bean>
+
+<bean id="saleVisitService" class="com.itheima.crm.service.impl.SaleVisitServiceImpl">
+</bean>
+
+<bean id="saleVisitDao" class="com.itheima.crm.dao.impl.SaleVisitDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/><!--sessionFactory不是SaleVisitDao提供所以不能使用注解的方法注入sessionFactory-->
+</bean>
+
+
+	<!-- 配置sessionFactory，这里因为采取的Hibernate全部的交由给spring管理的第二种方法，所以需要在这里的配一下的数据源，并将连接的属性的都注入到的DataSource中 -->
+<!-- 配置dataSource -->      
 
 <!-- 将配置好dataSource注入到的sessionFactory中，并将Hibernate中的剩下的相关的信息注入进来 -->
 <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"> 
@@ -120,6 +133,7 @@
 			<value>com/itheima/crm/domain/Customer.hbm.xml</value>
 			<value>com/itheima/crm/domain/BaseDict.hbm.xml</value>
 			<value>com/itheima/crm/domain/LinkMan.hbm.xml</value>
+			<value>com/itheima/crm/domain/SaleVisit.hbm.xml</value>
 		</list>
 	</property>
 </bean>
