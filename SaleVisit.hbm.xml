@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<!-- 配置实体和表的映射 -->
+<hibernate-mapping>
+    <!--明确实体和表 -->
+    <class name="com.itheima.crm.domain.SaleVisit" table="sale_visit">
+        <!-- 对应主键，明确主键生成策略和id -->
+        <id name="visit_id" column="visit_id">
+            <generator class="uuid"></generator><!--主键是字符串类型-->
+        </id>
+        <property name="visit_time" column="visit_time"/>
+        <property name="visit_addr" column="visit_addr"/>
+
+        <property name="visit_detail" column="visit_detail"/>
+        <property name="visit_nexttime" column="visit_nexttime"/>
+
+
+        <!-- 在这里配置多对一的映射 -->
+        <many-to-one name="customer" class="com.itheima.crm.domain.Customer" column="visit_cust_id"/>
+        <many-to-one name="user" class="com.itheima.crm.domain.User" column="visit_user_id"/>
+
+
+    </class>
+
+
+</hibernate-mapping>
